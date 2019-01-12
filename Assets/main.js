@@ -74,3 +74,17 @@ $(document).ready(function()
     }//End of uberTimeFunc
 
 
+
+     // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCSAxfQpAwFsTgPDiztoxniYsq4oS7fMIk",
+            authDomain: "project1-gtbootcamp.firebaseapp.com",
+            databaseURL: "https://project1-gtbootcamp.firebaseio.com",
+            projectId: "project1-gtbootcamp",
+            storageBucket: "",
+            messagingSenderId: "1082241557741"
+        };
+        firebase.initializeApp(config);
+
+
+
