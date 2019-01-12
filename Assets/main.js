@@ -5,6 +5,7 @@ var locLat = '';
 var uberPrice;
 var uberTime;
 var locationArray;
+var searched = "";
 
 $(document).ready(function()
     {
@@ -19,7 +20,7 @@ $(document).ready(function()
         { 
             console.log("Geolocation is not supported by this browser.");
         }
-    });//Document.Ready Ends here
+  
 
     //Second Part of Location Functions. Sets the variables for the current location of the user.
     function showPosition(position) 
@@ -74,13 +75,29 @@ $(document).ready(function()
         console.log(uberTime);
     }//End of uberTimeFunc
 
-     // Initialize Firebase
+
+     //Ajax call to the yelp API
+     $.ajax({
+        url: "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=by-chloe&location=boston",
+        headers: {
+         'Authorization':'Bearer g0n8An81KiDzyrjHvJ6N5WNNdAArz-dQEBFLVjN12OI-HO5ov33zXYgt8kupJLcR7AdjAT2Vj5-bZ0XGXx-wdwooYoy1YhSpovrMF3KiVMHIsQu_hwmzzodNXQ46XHYx',
+     },
+        method: 'GET',
+        dataType: 'json',
+        success: function(data){
+            // Grab the results from the API JSON return
+            locationArray = data;
+        }
+
+        });
+
+        // Initialize Firebase
         var config = {
             apiKey: "AIzaSyCSAxfQpAwFsTgPDiztoxniYsq4oS7fMIk",
             authDomain: "project1-gtbootcamp.firebaseapp.com",
             databaseURL: "https://project1-gtbootcamp.firebaseio.com",
             projectId: "project1-gtbootcamp",
-            storageBucket: "",
+            storageBucket: "project1-gtbootcamp.appspot.com",
             messagingSenderId: "1082241557741"
         };
         firebase.initializeApp(config);
@@ -88,17 +105,38 @@ $(document).ready(function()
     //Adding database variable to provide easy calls to the db
         var database = firebase.database()
 
-    //Ajax call to the yelp API
-        $.ajax({
-            url: "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=by-chloe&location=boston",
-            headers: {
-             'Authorization':'Bearer g0n8An81KiDzyrjHvJ6N5WNNdAArz-dQEBFLVjN12OI-HO5ov33zXYgt8kupJLcR7AdjAT2Vj5-bZ0XGXx-wdwooYoy1YhSpovrMF3KiVMHIsQu_hwmzzodNXQ46XHYx',
-         },
-            method: 'GET',
-            dataType: 'json',
-            success: function(data){
-                // Grab the results from the API JSON return
-                locationArray = data;
-            }
-         });      
+         // store searched data to firebase
+    $("#search").on("click", function(event) {
+        event.preventDefault();
+  
+        // Grabbed values from text-boxes
+       searched = $("#search-input").val().trim();
+        
+  
+        // Code for "Setting values in the database"
+        database.ref().set({
+          searched: searched,
+          
+        });
+
+        // Firebase watcher .on("child_added"
+    database.ref().on("child_added", function(snapshot) {
+        // storing the snapshot.val() in a variable for convenience
+        var sv = snapshot.val();
+  
+        // Console.logging the last user's data
+        console.log(sv.searched);
+
+    });
+
+});
+
+});//Document.Ready Ends here
+         
+         
+         
+         
+         
+        
+     
 
