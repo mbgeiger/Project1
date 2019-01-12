@@ -4,6 +4,7 @@ var locLong = '';
 var locLat = '';
 var uberPrice;
 var uberTime;
+var locationArray;
 
 $(document).ready(function()
     {
@@ -73,8 +74,6 @@ $(document).ready(function()
         console.log(uberTime);
     }//End of uberTimeFunc
 
-
-
      // Initialize Firebase
         var config = {
             apiKey: "AIzaSyCSAxfQpAwFsTgPDiztoxniYsq4oS7fMIk",
@@ -86,5 +85,20 @@ $(document).ready(function()
         };
         firebase.initializeApp(config);
 
+    //Adding database variable to provide easy calls to the db
+        var database = firebase.database()
 
+    //Ajax call to the yelp API
+        $.ajax({
+            url: "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=by-chloe&location=boston",
+            headers: {
+             'Authorization':'Bearer g0n8An81KiDzyrjHvJ6N5WNNdAArz-dQEBFLVjN12OI-HO5ov33zXYgt8kupJLcR7AdjAT2Vj5-bZ0XGXx-wdwooYoy1YhSpovrMF3KiVMHIsQu_hwmzzodNXQ46XHYx',
+         },
+            method: 'GET',
+            dataType: 'json',
+            success: function(data){
+                // Grab the results from the API JSON return
+                locationArray = data;
+            }
+         });      
 
