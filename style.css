@@ -1,0 +1,32 @@
+header {
+    font-size: 24px;
+    text-align: center;
+    padding: 20px 0;
+    margin: 0;
+    margin-bottom: 20px;
+    color: aqua
+  }
+
+body {
+    /* Box-model */
+    padding: 0;
+  
+    /* Positioning */
+    margin: 0;
+    font-family: Georgia, "Times New Roman", Times, serif;
+  
+    /* Typography */
+    font-size: 18px;
+    line-height: 150%;
+    color: #333;
+  
+    /* Visual */
+    background: #efeee7;
+
+
+  
+  }
+
+  .body{
+    background-color: aquamarine;
+  }
