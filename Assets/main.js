@@ -1,10 +1,8 @@
 var userLong ='';
 var userLat = '';
-var locLong = '';
-var locLat = '';
 var uberPrice;
 var uberTime;
-var locationArray;
+var locationArray = [];
 var searched = "";
 
 $(document).ready(function()
@@ -34,7 +32,7 @@ $(document).ready(function()
 
     //Call this function and it will use the global userLat and userLong variables as well as the global locLat and locLong variables to return a JSON with uber pricing estimates
     //uberPrice[i].localized_display_name (type of uber) uberPrice[i].distance (distance of the trip) uberPrice[i].duration (duration of the trip in seconds) uberPrice[i].estimate (cost estimate String)
-    var uberPriceFunc = function()
+     window.uberPriceFunc = function(lat, long)
     {
         console.log("in price function");
         console.log('Lat: '+userLat + 'Long: '+userLong);
@@ -47,7 +45,7 @@ $(document).ready(function()
             }
         };
 
-        xhttp.open('GET', 'https://api.uber.com/v1.2/estimates/price?start_latitude='+userLat+'&start_longitude='+userLong+'&end_latitude='+locLat+'&end_longitude='+locLong,true);
+        xhttp.open('GET', 'https://api.uber.com/v1.2/estimates/price?start_latitude='+userLat+'&start_longitude='+userLong+'&end_latitude='+lat+'&end_longitude='+long,true);
         xhttp.setRequestHeader("Authorization", "Token gyxrCkq-oUEznly0dtJ9nx2kXyWpN3hJoUEnsykL");
         xhttp.send();
         uberPrice = xhttp.response;
@@ -56,7 +54,7 @@ $(document).ready(function()
 
     //Call this function and it will use the global userLat and userLong variables as well as the global locLat and locLong variables to return a JSON with uber pricing estimates
     //uberTime[i].localized_display_name (type of uber) uberTime[i].estimate (time estimate away from you in seconds). Maybe divide this by 60 to get minutes right off the bat.
-    var uberTimeFunc = function()
+     window.uberTimeFunc = function()
     {
         console.log("in time function");
         console.log('Lat: '+userLat + 'Long: '+userLong);
@@ -77,20 +75,23 @@ $(document).ready(function()
 
 
      //Ajax call to the yelp API
-     $.ajax({
-        url: "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=by-chloe&location=boston",
-        headers: {
-         'Authorization':'Bearer g0n8An81KiDzyrjHvJ6N5WNNdAArz-dQEBFLVjN12OI-HO5ov33zXYgt8kupJLcR7AdjAT2Vj5-bZ0XGXx-wdwooYoy1YhSpovrMF3KiVMHIsQu_hwmzzodNXQ46XHYx',
-     },
-        method: 'GET',
-        dataType: 'json',
-        success: function(data){
-            // Grab the results from the API JSON return
-            locationArray = data;
-        }
+     var yelpCall = function(search)
+     {
+        $.ajax({
+            url: "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term="+search+"&latitude="+userLat+"&longitude="+userLong,
+            headers: {
+            'Authorization':'Bearer g0n8An81KiDzyrjHvJ6N5WNNdAArz-dQEBFLVjN12OI-HO5ov33zXYgt8kupJLcR7AdjAT2Vj5-bZ0XGXx-wdwooYoy1YhSpovrMF3KiVMHIsQu_hwmzzodNXQ46XHYx',
+        },
+            method: 'GET',
+            dataType: 'json',
+            success: function(data){
+                // Grab the results from the API JSON return
+                locationArray = data;
+                console.log("Done With Yelp");
+            }
 
-        });
-
+            })
+    };
         // Initialize Firebase
         var config = {
             apiKey: "AIzaSyCSAxfQpAwFsTgPDiztoxniYsq4oS7fMIk",
@@ -107,6 +108,7 @@ $(document).ready(function()
 
          // store searched data to firebase
     $("#search").on("click", function(event) {
+        $("#locations").empty();
         event.preventDefault();
   
         // Grabbed values from text-boxes
@@ -121,21 +123,99 @@ $(document).ready(function()
 
         // Firebase watcher .on("child_added"
     database.ref().on("child_added", function(snapshot) {
-        // storing the snapshot.val() in a variable for convenience
-        var sv = snapshot.val();
-  
-        // Console.logging the last user's data
-        console.log(sv.searched);
-
+            // storing the snapshot.val() in a variable for convenience
+            var sv = snapshot.val();
+    
+            // Console.logging the last user's data
+            console.log(sv.searched);
+            
+        });
+        apiLoop();
     });
 
-});
+
+
+
+var apiLoop = function()
+         {
+             
+              console.log("In the button function");
+             var searchQuery = $("#search-input").val();
+             yelpCall(searchQuery);
+            setTimeout(function(){
+                loop(0)
+            },2000);
+
+            
+            var loop = function(i)   
+            {
+                setTimeout(function()
+                {
+                    locLat = locationArray.businesses[i].coordinates.latitude;
+                    locLong = locationArray.businesses[i].coordinates.longitude;
+                    var businessName = locationArray.businesses[i].name;
+                    var rating = locationArray.businesses[i].rating;
+                    var website = locationArray.businesses[i].url;
+                    var imageUrl = locationArray.businesses[i].image_url;
+                    var distance = ((locationArray.businesses[i].distance)*.000621371).toFixed(2);
+                    var card = $("<div class='card mx-auto' style='width: 18rem;'>")
+                    var image = $("<image class='card-img-top' style='height:280px; width:280px;'>")
+                        image.attr('src',imageUrl);
+                        card.append(image);
+                    var body = $("<div class='card-body'>");
+                    body.append($("<h5 class='card-title'>"+businessName+"</h5>"));
+                    var list = $("<ul class='list-group list-group-flush' id=list"+i+">")
+                    list.append($("<li class='list-group-item'>Rating: "+rating+"</li>"));
+                    list.append($("<li class='list-group-item'>Only "+distance+" miles away!</li>"));
+                    card.append(body);
+                    var body2 = $("<div class='card-body'>");
+                    body2.append($("<a href='"+website+"'>Location Website</a>"));
+                    var button = ($("<button class='uberButton btn btn-primary' type='button'>Check Uber Stats!</button>"))
+                    button.attr("long",locLong);
+                    button.attr("lat",locLat);
+                    button.attr("num",i);
+                    body2.append(button);   
+                    card.append(list);
+                    card.append(body2);
+                    $("#locations").append(card);
+
+                    if(i<4)
+                    {
+                        loop(i+1);
+                    }
+                 
+                },0);
+              
+            }
+
+          }
 
 });//Document.Ready Ends here
-         
-         
-         
-         
+
+$(document).on("click", ".uberButton", function(){
+
+    
+    uberTimeFunc();
+    uberPriceFunc($(this).attr('lat'),$(this).attr('long'));
+    setTimeout(function(){
+        setters()
+    },2000);
+
+    var setters = function()
+    {
+        var uberPriceEst = uberPrice[1].estimate;
+        var uberName = uberPrice[1].display_name;
+        var uberDuration = (uberPrice[1].duration)/60;
+    }
+
+    var listNum = "list"+$(this).attr('num');
+    $("#"+listNum)
+    .append(
+      $('<li>Type: '+uberName+'. Price: '+uberPriceEst+'. Time In Uber: '+uberDuration+' Mins.</li>')
+    );
+
+    $(this).prop('disabled',true);
+  });
          
         
      
