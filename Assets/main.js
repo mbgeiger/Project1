@@ -116,22 +116,45 @@ $(document).ready(function()
         
   
         // Code for "Setting values in the database"
-        database.ref().set({
+        database.ref().push({
           searched: searched,
           
         });
+        apiLoop(); 
+    });
 
         // Firebase watcher .on("child_added"
+
     database.ref().on("child_added", function(snapshot) {
             // storing the snapshot.val() in a variable for convenience
             var sv = snapshot.val();
     
             // Console.logging the last user's data
             console.log(sv.searched);
-            
+             
         });
-        apiLoop();
-    });
+
+        database.ref().on("child_added", function(snapshot, ) {
+            // storing the snapshot.val() in a variable for convenience
+           var sv = snapshot.val();
+    
+    
+    
+           
+                
+          
+                // Change the HTML to reflect
+                $("#last-searched").text(snapshot.val().searched);
+                
+          
+      
+            // Console.logging the last user's data
+            console.log(sv.searched);
+            //console.log(prevChildKey);
+    
+        });
+        
+    
 
 
 
@@ -190,6 +213,11 @@ var apiLoop = function()
 
           }
 
+  
+
+
+
+
 });//Document.Ready Ends here
 
 $(document).on("click", ".uberButton", function(){
@@ -216,7 +244,3 @@ $(document).on("click", ".uberButton", function(){
 
     $(this).prop('disabled',true);
   });
-         
-        
-     
-
