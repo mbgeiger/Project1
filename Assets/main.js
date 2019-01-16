@@ -114,22 +114,34 @@ $(document).ready(function()
         
   
         // Code for "Setting values in the database"
-        database.ref().set({
+        database.ref().push({
           searched: searched,
           
         });
+    });
 
         // Firebase watcher .on("child_added"
-    database.ref().on("child_added", function(snapshot) {
+    database.ref().on("child_added", function(snapshot, ) {
         // storing the snapshot.val() in a variable for convenience
-        var sv = snapshot.val();
+       var sv = snapshot.val();
+
+
+
+       
+            
+      
+            // Change the HTML to reflect
+            $("#last-searched").text(snapshot.val().searched);
+            
+      
   
         // Console.logging the last user's data
         console.log(sv.searched);
+        //console.log(prevChildKey);
 
     });
 
-});
+
 
 });//Document.Ready Ends here
          
