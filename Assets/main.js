@@ -42,14 +42,13 @@ $(document).ready(function()
             if (this.readyState == 4 && this.status == 200) {
             // Typical action to be performed when the document is ready:
             console.log(xhttp.responseText);
+            uberPrice = xhttp.responseText;
             }
         };
 
         xhttp.open('GET', 'https://api.uber.com/v1.2/estimates/price?start_latitude='+userLat+'&start_longitude='+userLong+'&end_latitude='+lat+'&end_longitude='+long,true);
         xhttp.setRequestHeader("Authorization", "Token gyxrCkq-oUEznly0dtJ9nx2kXyWpN3hJoUEnsykL");
         xhttp.send();
-        uberPrice = xhttp.response;
-        console.log(uberPrice);
     }//End of uberPriceFunc
 
     //Call this function and it will use the global userLat and userLong variables as well as the global locLat and locLong variables to return a JSON with uber pricing estimates
@@ -228,10 +227,12 @@ $(document).on("click", ".uberButton", function(){
     },3000);
 
     var setters = function()
-    {
-        var uberPriceEst = uberPrice[1].estimate;
-        var uberName = uberPrice[1].display_name;
-        var uberDuration = (uberPrice[1].duration)/60;
+    {   
+        console.log(uberPrice);
+        var newData2=JSON.parse(uberPrice).prices;
+        var uberPriceEst = newData2[1].estimate;
+        var uberName = newData2[1].display_name;
+        var uberDuration = (newData2[1].duration)/60;
         var listNum = "list"+$(this).attr('num');
         $("#"+listNum)
         .append(
