@@ -167,7 +167,7 @@ var apiLoop = function()
              yelpCall(searchQuery);
             setTimeout(function(){
                 loop(0)
-            },2000);
+            },2500);
 
             
             var loop = function(i)   
@@ -222,25 +222,25 @@ var apiLoop = function()
 
 $(document).on("click", ".uberButton", function(){
 
-    
-    uberTimeFunc();
     uberPriceFunc($(this).attr('lat'),$(this).attr('long'));
     setTimeout(function(){
         setters()
-    },2000);
+    },3000);
 
     var setters = function()
     {
         var uberPriceEst = uberPrice[1].estimate;
         var uberName = uberPrice[1].display_name;
         var uberDuration = (uberPrice[1].duration)/60;
+        var listNum = "list"+$(this).attr('num');
+        $("#"+listNum)
+        .append(
+        $('<li>Type: '+uberName+'. Price: '+uberPriceEst+'. Time In Uber: '+uberDuration+' Mins.</li>')
+        );
     }
 
-    var listNum = "list"+$(this).attr('num');
-    $("#"+listNum)
-    .append(
-      $('<li>Type: '+uberName+'. Price: '+uberPriceEst+'. Time In Uber: '+uberDuration+' Mins.</li>')
-    );
 
     $(this).prop('disabled',true);
   });
+
+  
