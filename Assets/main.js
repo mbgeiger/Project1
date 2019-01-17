@@ -226,7 +226,7 @@ $(document).on("click", ".uberButton", function(){
     },3000);
 
     var listNum = $(this).attr('num');
-
+    console.log(listNum);
     
 
     var setters = function()
@@ -237,7 +237,7 @@ $(document).on("click", ".uberButton", function(){
         var uberName = newData2[1].display_name;
         var uberDuration = (newData2[1].duration)/60;
         console.log(uberPriceEst+" "+uberName+" "+uberDuration+" "+listNum);
-        $('"#'+listNum+'"')
+        $("#"+listNum)
         .append(
         $("<li class='list-group-item'>Type: "+uberName+". Price: "+uberPriceEst+". Time In Uber: "+uberDuration+" Mins.</li>")
         );
