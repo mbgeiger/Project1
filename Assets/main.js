@@ -232,7 +232,6 @@ $(document).on("click", ".uberButton", function(){
     var setters = function()
     {   
         console.log(uberPrice);
-        console.log($(this).attr('num'));
         var newData2=JSON.parse(uberPrice).prices;
         var uberPriceEst = newData2[1].estimate;
         var uberName = newData2[1].display_name;
