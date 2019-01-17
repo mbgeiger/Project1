@@ -41,7 +41,6 @@ $(document).ready(function()
             xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
             // Typical action to be performed when the document is ready:
-            console.log(xhttp.responseText);
             uberPrice = xhttp.responseText;
             }
         };
@@ -186,7 +185,7 @@ var apiLoop = function()
                         card.append(image);
                     var body = $("<div class='card-body'>");
                     body.append($("<h5 class='card-title'>"+businessName+"</h5>"));
-                    var list = $("<ul class='list-group list-group-flush' id=list"+i+">")
+                    var list = $("<ul class='list-group list-group-flush' id="+i+"</ul>");
                     list.append($("<li class='list-group-item'>Rating: "+rating+"</li>"));
                     list.append($("<li class='list-group-item'>Only "+distance+" miles away!</li>"));
                     card.append(body);
@@ -233,10 +232,11 @@ $(document).on("click", ".uberButton", function(){
         var uberPriceEst = newData2[1].estimate;
         var uberName = newData2[1].display_name;
         var uberDuration = (newData2[1].duration)/60;
-        var listNum = "list"+$(this).attr('num');
-        $("#"+listNum)
+        var listNum = $(this).attr('num');
+        console.log(uberPriceEst+" "+uberName+" "+uberDuration+" "+listNum);
+        $('"#'+listNum+'"')
         .append(
-        $('<li>Type: '+uberName+'. Price: '+uberPriceEst+'. Time In Uber: '+uberDuration+' Mins.</li>')
+        $("<li class='list-group-item'>Type: "+uberName+". Price: "+uberPriceEst+". Time In Uber: "+uberDuration+" Mins.</li>")
         );
     }
 
