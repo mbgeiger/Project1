@@ -185,7 +185,7 @@ var apiLoop = function()
                         card.append(image);
                     var body = $("<div class='card-body'>");
                     body.append($("<h5 class='card-title'>"+businessName+"</h5>"));
-                    var list = $("<ul class='list-group list-group-flush' id="+i+"</ul>");
+                    var list = $("<ul class='list-group list-group-flush' id='"+i+"'</ul>");
                     list.append($("<li class='list-group-item'>Rating: "+rating+"</li>"));
                     list.append($("<li class='list-group-item'>Only "+distance+" miles away!</li>"));
                     card.append(body);
@@ -227,6 +227,7 @@ $(document).on("click", ".uberButton", function(){
 
     var listNum = $(this).attr('num');
     console.log(listNum);
+    console.log($("#"+listNum));
     
 
     var setters = function()
@@ -237,10 +238,7 @@ $(document).on("click", ".uberButton", function(){
         var uberName = newData2[1].display_name;
         var uberDuration = (newData2[1].duration)/60;
         console.log(uberPriceEst+" "+uberName+" "+uberDuration+" "+listNum);
-        $("#"+listNum)
-        .append(
-        $("<li class='list-group-item'>Type: "+uberName+". Price: "+uberPriceEst+". Time In Uber: "+uberDuration+" Mins.</li>")
-        );
+        $("#"+listNum).append($("<li class='list-group-item'>Type: "+uberName+". Price: "+uberPriceEst+". Time In Uber: "+uberDuration+" Mins.</li>"));
     }
 
 
