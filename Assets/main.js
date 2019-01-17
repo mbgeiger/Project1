@@ -108,6 +108,8 @@ $(document).ready(function()
     $("#search").on("click", function(event) {
         $("#locations").empty();
         event.preventDefault();
+
+     
   
         // Grabbed values from text-boxes
        searched = $("#search-input").val().trim();
@@ -119,43 +121,24 @@ $(document).ready(function()
           
         });
         apiLoop(); 
+      
     });
+ 
 
         // Firebase watcher .on("child_added"
 
-    database.ref().on("child_added", function(snapshot) {
+    database.ref().limitToLast(5).on("child_added", function(snapshot) {
             // storing the snapshot.val() in a variable for convenience
             var sv = snapshot.val();
     
             // Console.logging the last user's data
             console.log(sv.searched);
+                  // Change the HTML to reflect
+                  $("#last-searched").text(snapshot.val().searched);
              
         });
-
-        database.ref().on("child_added", function(snapshot, ) {
-            // storing the snapshot.val() in a variable for convenience
-           var sv = snapshot.val();
-    
-    
-    
-           
-                
-          
-                // Change the HTML to reflect
-                $("#last-searched").text(snapshot.val().searched);
-                
-          
       
-            // Console.logging the last user's data
-            console.log(sv.searched);
-            //console.log(prevChildKey);
-    
-        });
         
-    
-
-
-
 
 var apiLoop = function()
          {
