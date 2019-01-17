@@ -225,6 +225,10 @@ $(document).on("click", ".uberButton", function(){
         setters()
     },3000);
 
+    var listNum = $(this).attr('num');
+
+    
+
     var setters = function()
     {   
         console.log(uberPrice);
@@ -232,7 +236,6 @@ $(document).on("click", ".uberButton", function(){
         var uberPriceEst = newData2[1].estimate;
         var uberName = newData2[1].display_name;
         var uberDuration = (newData2[1].duration)/60;
-        var listNum = $(this).attr('num');
         console.log(uberPriceEst+" "+uberName+" "+uberDuration+" "+listNum);
         $('"#'+listNum+'"')
         .append(
