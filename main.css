@@ -1,0 +1,9 @@
+h1 {
+color:white;
+
+}
+
+.jumbotron{
+    background-image: url("Assets/Atlanta_Skyline_from_Buckhead.jpg");
+    background-size: contain;
+}
