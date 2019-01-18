@@ -242,7 +242,6 @@ $(document).on("click", ".uberButton", function(){
     console.log(listNum);
     console.log($("#"+listNum));
     
-
     var setters = function()
     {   
         console.log(uberPrice);
@@ -251,7 +250,8 @@ $(document).on("click", ".uberButton", function(){
         var uberName = newData2[1].display_name;
         var uberDuration = (newData2[1].duration)/60;
         console.log(uberPriceEst+" "+uberName+" "+uberDuration+" "+listNum);
-        $("#"+listNum).append($("<li class='list-group-item'><p>Type: "+uberName+".</p><p> Price: "+uberPriceEst+".</p> <p> Estimated Uber Duration: "+uberDuration+" Mins.</p></li>"));
+       $("#uberLi"+listNum).remove();
+        $("#"+listNum).append($("<li class='list-group-item' id='uberLi"+listNum+"'><p>Type: "+uberName+".</p><p> Price: "+uberPriceEst+".</p> <p> Estimated Uber Duration: "+uberDuration+" Mins.</p></li>"));
         $(".uberButton").prop('disabled',false);
         
     }
