@@ -107,12 +107,22 @@ $(document).ready(function()
          // store searched data to firebase
     $("#search").on("click", function(event) {
         $("#locations").empty();
+       
         event.preventDefault();
 
-     
-  
+       
+
+        
+
+
+      
         // Grabbed values from text-boxes
        searched = $("#search-input").val().trim();
+       if (searched == "")
+       {
+           alert("please enter what you are looking");
+       }
+       else{
         
   
         // Code for "Setting values in the database"
@@ -121,7 +131,8 @@ $(document).ready(function()
           
         });
         apiLoop(); 
-      
+        $("#last-searched").empty()
+    }
     });
  
 
