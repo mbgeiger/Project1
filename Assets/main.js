@@ -231,6 +231,8 @@ var apiLoop = function()
 
 $(document).on("click", ".uberButton", function(){
 
+    $(".uberButton").prop('disabled',true);
+
     uberPriceFunc($(this).attr('lat'),$(this).attr('long'));
     setTimeout(function(){
         setters()
@@ -250,10 +252,10 @@ $(document).on("click", ".uberButton", function(){
         var uberDuration = (newData2[1].duration)/60;
         console.log(uberPriceEst+" "+uberName+" "+uberDuration+" "+listNum);
         $("#"+listNum).append($("<li class='list-group-item'><p>Type: "+uberName+".</p><p> Price: "+uberPriceEst+".</p> <p> Estimated Uber Duration: "+uberDuration+" Mins.</p></li>"));
+        $(".uberButton").prop('disabled',false);
+        
     }
 
-
-    $(this).prop('disabled',true);
   });
 
   
