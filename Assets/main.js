@@ -4,6 +4,7 @@ var uberPrice;
 var uberTime;
 var locationArray = [];
 var searched = "";
+var nanobar;
 
 $(document).ready(function()
     {
@@ -106,14 +107,21 @@ $(document).ready(function()
 
          // store searched data to firebase
     $("#search").on("click", function(event) {
-        $("#locations").empty();
+    $("#locations").empty();
        
         event.preventDefault();
+     
 
-       
+    var progress = 0;
+    nanobar = new Nanobar('bar','row',$("#locations"));
+    var loadBar = setInterval(function(){
+        nanobar.go(progress)
+        progress += 1;
+        console.log(progress);
+        if(progress >= 100) clearInterval(loadBar);
 
-        
-
+    },30)
+ 
 
       
         // Grabbed values from text-boxes
@@ -159,7 +167,8 @@ var apiLoop = function()
              yelpCall(searchQuery);
             setTimeout(function(){
                 loop(0)
-            },2500);
+                nanobar.go(0);
+            },4000);
 
             
             var loop = function(i)   
@@ -232,7 +241,7 @@ $(document).on("click", ".uberButton", function(){
         var uberName = newData2[1].display_name;
         var uberDuration = (newData2[1].duration)/60;
         console.log(uberPriceEst+" "+uberName+" "+uberDuration+" "+listNum);
-        $("#"+listNum).append($("<li class='list-group-item'>Type: "+uberName+". Price: "+uberPriceEst+". Time In Uber: "+uberDuration+" Mins.</li>"));
+        $("#"+listNum).append($("<li class='list-group-item'><p>Type: "+uberName+".</p><p> Price: "+uberPriceEst+".</p> <p> Estimated Uber Duration: "+uberDuration+" Mins.</p></li>"));
     }
 
 
