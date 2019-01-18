@@ -87,6 +87,8 @@ $(document).ready(function()
                 // Grab the results from the API JSON return
                 locationArray = data;
                 console.log("Done With Yelp");
+                loop(0);
+                nanobar.go(0);
             }
 
             })
@@ -110,6 +112,9 @@ $(document).ready(function()
     $("#locations").empty();
     $(this).prop('disabled',true);
     event.preventDefault();
+
+    var searchQuery = $("#search-input").val();
+    yelpCall(searchQuery);
      
 
     var progress = 0;
@@ -138,7 +143,6 @@ $(document).ready(function()
           searched: searched,
           
         });
-        apiLoop(); 
         $("#last-searched").empty()
     }
     });
@@ -159,68 +163,55 @@ $(document).ready(function()
       
         
 
-var apiLoop = function()
-         {
-             
-              console.log("In the button function");
-             var searchQuery = $("#search-input").val();
-             yelpCall(searchQuery);
-            setTimeout(function(){
-                loop(0)
-                nanobar.go(0);
-            },2050);
 
-            
-            var loop = function(i)   
+    var loop = function(i)   
+    {
+        $("#search").prop('disabled',false);
+        setTimeout(function()
+        {   
+            try
             {
-                $("#search").prop('disabled',false);
-                setTimeout(function()
-                {   
-                    try
-                    {
-                        locLat = locationArray.businesses[i].coordinates.latitude;
-                        locLong = locationArray.businesses[i].coordinates.longitude;
-                        var businessName = locationArray.businesses[i].name;
-                        var rating = locationArray.businesses[i].rating;
-                        var website = locationArray.businesses[i].url;
-                        var imageUrl = locationArray.businesses[i].image_url;
-                        var distance = ((locationArray.businesses[i].distance)*.000621371).toFixed(2);
-                        var card = $("<div class='card mx-auto' style='width: 18rem;'>")
-                        var image = $("<image class='card-img-top' style='height:280px; width:280px;'>")
-                            image.attr('src',imageUrl);
-                            card.append(image);
-                        var body = $("<div class='card-body'>");
-                        body.append($("<h5 class='card-title'>"+businessName+"</h5>"));
-                        var list = $("<ul class='list-group list-group-flush' id='"+i+"'</ul>");
-                        list.append($("<li class='list-group-item'>Rating: "+rating+"</li>"));
-                        list.append($("<li class='list-group-item'>Only "+distance+" miles away!</li>"));
-                        card.append(body);
-                        var body2 = $("<div class='card-body'>");
-                        body2.append($("<a href='"+website+"'>Location Website</a>"));
-                        var button = ($("<button class='uberButton btn btn-primary' type='button'>Check Uber Stats!</button>"))
-                        button.attr("long",locLong);
-                        button.attr("lat",locLat);
-                        button.attr("num",i);
-                        body2.append(button);   
-                        card.append(list);
-                        card.append(body2);
-                        $("#locations").append(card);
-
-                        if(i<4)
-                        {
-                            loop(i+1);
-                        }
-                    }
-                    catch(error)
-                    {
-                        $("#locations").append("<h1>That's Our Bad! Please Try Again</h1>");
-                    }
-                 
-                },0);
-              
+                locLat = locationArray.businesses[i].coordinates.latitude;
+                locLong = locationArray.businesses[i].coordinates.longitude;
+                var businessName = locationArray.businesses[i].name;
+                var rating = locationArray.businesses[i].rating;
+                var website = locationArray.businesses[i].url;
+                var imageUrl = locationArray.businesses[i].image_url;
+                var distance = ((locationArray.businesses[i].distance)*.000621371).toFixed(2);
+                var card = $("<div class='card mx-auto' style='width: 18rem;'>")
+                var image = $("<image class='card-img-top' style='height:280px; width:280px;'>")
+                    image.attr('src',imageUrl);
+                    card.append(image);
+                var body = $("<div class='card-body'>");
+                body.append($("<h5 class='card-title'>"+businessName+"</h5>"));
+                var list = $("<ul class='list-group list-group-flush' id='"+i+"'</ul>");
+                list.append($("<li class='list-group-item'>Rating: "+rating+"</li>"));
+                list.append($("<li class='list-group-item'>Only "+distance+" miles away!</li>"));
+                card.append(body);
+                var body2 = $("<div class='card-body'>");
+                body2.append($("<a href='"+website+"'>Location Website</a>"));
+                var button = ($("<button class='uberButton btn btn-primary' type='button'>Check Uber Stats!</button>"))
+                button.attr("long",locLong);
+                button.attr("lat",locLat);
+                button.attr("num",i);
+                body2.append(button);   
+                card.append(list);
+                card.append(body2);
+                $("#locations").append(card)
+                if(i<4)
+                {
+                    loop(i+1);
+                }
             }
+            catch(error)
+            {
+                $("#locations").append("<h1>That's Our Bad! Please Try Again</h1>");
+            }               
+        },0)
+                
+    }
+   
 
-          }
 
   
 
