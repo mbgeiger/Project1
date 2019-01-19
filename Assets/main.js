@@ -110,40 +110,44 @@ $(document).ready(function()
          // store searched data to firebase
     $("#search").on("click", function(event) {
     $("#locations").empty();
-    $(this).prop('disabled',true);
+    //$(this).prop('disabled',true);
     event.preventDefault();
 
-    var searchQuery = $("#search-input").val();
-    yelpCall(searchQuery);
+  
      
 
-    var progress = 0;
-    nanobar = new Nanobar('bar','row',$("#locations"));
-    nanobar.go(0);
-    var loadBar = setInterval(function(){
-        nanobar.go(progress)
-        progress += 1;
-        if(progress >= 100) clearInterval(loadBar);
-
-    },20)
+   
  
 
       
         // Grabbed values from text-boxes
        searched = $("#search-input").val().trim();
-       if (searched == "")
+       if (searched === "")
        {
            alert("please enter what you are looking");
+           return false;
+          
        }
        else{
-        
+        var searchQuery = $("#search-input").val();
+        yelpCall(searchQuery);
+
+        var progress = 0;
+        nanobar = new Nanobar('bar','row',$("#locations"));
+        nanobar.go(0);
+        var loadBar = setInterval(function(){
+            nanobar.go(progress)
+            progress += 1;
+            if(progress >= 100) clearInterval(loadBar);
+    
+        },20)
   
         // Code for "Setting values in the database"
         database.ref().push({
-          searched: searched,
+          user_search: searched,
           
         });
-        $("#last-searched").empty()
+        $("#recent-search").empty()
     }
     });
  
@@ -155,9 +159,14 @@ $(document).ready(function()
             var sv = snapshot.val();
     
             // Console.logging the last user's data
-            console.log(sv.searched);
+            console.log(sv.user_search);
                   // Change the HTML to reflect
-                  $("#last-searched").text(snapshot.val().searched);
+
+
+
+
+                  
+                  $("#recent-search").text(snapshot.val().user_search);
              
         });
       
