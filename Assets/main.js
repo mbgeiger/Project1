@@ -124,7 +124,7 @@ $(document).ready(function()
        searched = $("#search-input").val().trim();
        if (searched === "")
        {
-           alert("please enter what you are looking");
+           alert("please enter what you are looking for");
            return false;
           
        }
